@@ -63,7 +63,7 @@ class TaskRunner(threading.Thread):
                     else:
                         self.log.info("Skipping task: %s", task)
 
-                qset.update(last_enqueued=Now())
+                qset.update(last_run=Now())
 
             # Clean up django DB connections
             close_old_connections()
