@@ -10,7 +10,7 @@ def trigger_task(self, request, queryset):
 trigger_task.short_description = 'Run Selected...'
 
 
-class CrontabBaseAdmin(admin.TableAdmin):
+class CrontabBaseAdmin(admin.ModelAdmin):
     list_display = ('crontab', 'function', 'kwargs', 'is_enabled', 'last_run',)
     list_filter = ('is_enabled',)
 
