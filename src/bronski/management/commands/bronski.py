@@ -15,6 +15,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         model = apps.get_model(settings.CRONTAB_MODEL)
         job = TaskRunner(model)
+        self.stdout.write("Starting Bronski server...")
+        job.start()
 
         # Set up escape hatch
         signal.signal(signal.SIGTERM, job.break_handler)
@@ -32,4 +34,6 @@ class Command(BaseCommand):
             try:
                 sleep(10)
             except ProgramKilled:
+                self.stdout.write("Stopping Bronski server...")
                 job.stop()
+                break
