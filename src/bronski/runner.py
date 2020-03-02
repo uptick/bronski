@@ -54,7 +54,7 @@ class TaskRunner(threading.Thread):
             with transaction.atomic():
                 qset = (
                     self.model.objects
-                    .filter(is_enabled=True, last_enqueued__lt=Now() - timedelta(seconds=59))
+                    .filter(is_enabled=True, last_run__lt=Now() - timedelta(seconds=59))
                     # Use skip_locked to catch any new tasks added, and avoid DB error
                     .select_for_update(skip_locked=True)
                 )
