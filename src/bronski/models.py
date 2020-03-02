@@ -1,20 +1,28 @@
 
 # TODO : support "universal" JSON field?
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.module_loading import import_string
-from django.utils.timezone import datetime
+from django.utils.timezone import now
+
+from croniter import croniter
+
+
+def cron_validator(value):
+    if not croniter.is_valid(value):
+        raise ValidationError("Invalid crontab format")
 
 
 class CrontabBase(models.Model):
     '''
     Abstract base model for custom Bronski crontab model.
     '''
-    crontab = models.CharField(max_length=100)
+    crontab = models.CharField(max_length=100, validators=[cron_validator])
     function = models.CharField(max_length=255)
     kwargs = JSONField(default=dict)
     is_enabled = models.BooleanField(default=False)
-    last_run = models.DateTimeField(default=datetime)
+    last_run = models.DateTimeField(default=now)
 
     class Meta:
         abstract = True
