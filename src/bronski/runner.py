@@ -23,20 +23,22 @@ class TaskRunner(threading.Thread):
         super().__init__()
         self.trigger = threading.Event()
         self.stopped = threading.Event()
-        self.log = logging.getLogger(f'{__name__}.job')
 
         self.model = model
 
     def timer_handler(self, signum, frame):
         '''Signal handler for timer.'''
+        log.debug("Scanning tasks...")
         self.trigger.set()
 
     @staticmethod
     def break_handler(signum, frame):
         '''Signal handler for ctrl-c / SIGTERM, to exit program.'''
+        log.info("Detected stop request...")
         raise ProgramKilled
 
     def stop(self):
+        log.info("Setting stop...")
         self.stopped.set()
         self.trigger.set()
         self.join()
@@ -44,6 +46,7 @@ class TaskRunner(threading.Thread):
     def run(self):
         while self.trigger.wait():
             if self.stopped.is_set():
+                log.info("Stopping...")
                 break
 
             now = timezone.localtime(timezone.now())
@@ -58,10 +61,10 @@ class TaskRunner(threading.Thread):
                 for task in qset:
                     next_run = croniter(task.crontab, now).get_next(datetime)
                     if (next_run - now) < timedelta(minutes=1):
-                        self.log.info("Enqueueing task: %s", task)
+                        log.info("Enqueueing task: %s", task)
                         task.run()
                     else:
-                        self.log.info("Skipping task: %s", task)
+                        log.info("Skipping task: %s", task)
 
                 qset.update(last_run=Now())
 
