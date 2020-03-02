@@ -6,7 +6,7 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from bronski.base import ProgramKilled, TaskRunner
+from bronski.runner import ProgramKilled, TaskRunner
 
 
 class Command(BaseCommand):
