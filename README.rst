@@ -57,7 +57,9 @@ You can override `run` in your custom model to, for instance, enqueue jobs:
 
         def run(self):
             func = self.get_function()
+            kwargs = self.get_kwargs()
+
             # Celery task API:
-            func.delay(**self.kwargs)
+            func.delay(**kwargs)
             # Dramatiq actor API:
-            func.send(**self.kwargs)
+            func.send(**kwargs)

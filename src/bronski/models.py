@@ -12,7 +12,7 @@ class CrontabBase(models.Model):
     '''
     crontab = models.CharField(max_length=100)
     function = models.CharField(max_length=255)
-    kwargs = JSONField(blank=True)
+    kwargs = JSONField(default=dict)
     is_enabled = models.BooleanField(default=False)
     last_run = models.DateTimeField(default=datetime)
 
@@ -20,8 +20,14 @@ class CrontabBase(models.Model):
         abstract = True
 
     def get_function(self):
+        """Helper to import the named function in `function`."""
         return import_string(self.function)
+
+    def get_kwargs(self):
+        """Hepler to return the kwargs field or default to empty dict."""
+        return self.kwargs or {}
 
     def run(self):
         func = self.get_function()
-        func(**self.kwargs)
+        kwargs = self.get_kwargs()
+        func(**kwargs)
