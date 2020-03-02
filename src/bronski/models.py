@@ -1,16 +1,15 @@
 
-from django.db import models
-# Todo : support "universal" JSON field?
+# TODO : support "universal" JSON field?
 from django.contrib.postgres.fields import JSONField
-from django.utils.timezone import datetime
+from django.db import models
 from django.utils.module_loading import import_string
+from django.utils.timezone import datetime
 
 
 class CrontabBase(models.Model):
     '''
     Abstract base model for custom Bronski crontab model.
     '''
-
     crontab = models.CharField(max_length=100)
     function = models.CharField(max_length=255)
     kwargs = JSONField(blank=True)

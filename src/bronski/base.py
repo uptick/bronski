@@ -1,12 +1,10 @@
 
 import logging
 import threading
-
 from datetime import datetime, timedelta
 
-from croniter import croniter
-
 import django
+from croniter import croniter
 from django.db import close_old_connections, transaction
 from django.db.models.functions import Now
 from django.utils import timezone

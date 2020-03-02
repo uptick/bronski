@@ -1,5 +1,4 @@
 import signal
-
 from datetime import datetime
 from time import sleep
 
@@ -7,7 +6,7 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from bronski.base import TaskRunner, ProgramKilled
+from bronski.base import ProgramKilled, TaskRunner
 
 
 class Command(BaseCommand):
