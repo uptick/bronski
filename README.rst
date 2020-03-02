@@ -11,6 +11,8 @@ It is ideally suited to being a task "beat" sever, akin to celery-beat.
 Install
 -------
 
+.. code-block:: sh
+
     $ pip install bronski
 
 
@@ -19,13 +21,22 @@ Setup
 
 1. Create a model in your own app that inherits from `bronski.models.CrontabBase`
 
-2. Run ``manage.py makemigrations`` and ``manage.py migrate``
+2. Create and apply migrations:
+
+   .. code-block:: sh
+
+    $ manage.py makemigrations
+    $ manage.py migrate
 
 3. Specify your model in settings
+
+   .. code-block:: python
 
     CRONTAB_MODEL = "myapp.MyCronModel"
 
 4. Launch your beat server:
+
+   .. code-block:: sh
 
     $ ./manage.py bronski
 
