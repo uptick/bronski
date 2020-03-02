@@ -20,12 +20,15 @@ class CrontabBase(models.Model):
     '''
     crontab = models.CharField(max_length=100, validators=[cron_validator])
     function = models.CharField(max_length=255)
-    kwargs = JSONField(default=dict)
+    kwargs = JSONField(default=dict, blank=True)
     is_enabled = models.BooleanField(default=False)
     last_run = models.DateTimeField(default=now)
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return f'{self.function} @ {self.crontab}'
 
     def get_function(self):
         """Helper to import the named function in `function`."""
