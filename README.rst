@@ -19,22 +19,26 @@ Install
 Setup
 -----
 
+1. Add 'bronski' to your `INSTALLED_APPS`
+
+   This is only needed to enable the management command.
+
 1. Create a model in your own app that inherits from `bronski.models.CrontabBase`
 
-2. Create and apply migrations:
+1. Create and apply migrations:
 
    .. code-block:: sh
 
     $ manage.py makemigrations
     $ manage.py migrate
 
-3. Specify your model in settings
+1. Specify your model in settings
 
    .. code-block:: python
 
     CRONTAB_MODEL = "myapp.MyCronModel"
 
-4. Launch your beat server:
+1. Launch your beat server:
 
    .. code-block:: sh
 
