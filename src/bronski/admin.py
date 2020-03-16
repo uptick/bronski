@@ -12,6 +12,7 @@ trigger_task.short_description = 'Run Selected...'
 
 class CrontabBaseAdmin(admin.ModelAdmin):
     list_display = ('crontab', 'function', 'kwargs', 'is_enabled', 'last_run',)
+    list_display_links = ('function',)
     list_filter = ('is_enabled',)
     list_editable = ('is_enabled',)
     date_hierarchy = 'last_run'
