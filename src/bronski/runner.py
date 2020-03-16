@@ -46,7 +46,7 @@ class JobRunner(threading.Thread):
                 log.info("Stopping...")
                 break
 
-            for job in self.model.current_jobs():
+            for job in self.model.objects.current_jobs():
                 log.info("Running job: %s", job)
                 try:
                     job.run()
