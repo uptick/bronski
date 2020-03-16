@@ -44,7 +44,7 @@ Setup
 
     $ ./manage.py bronski
 
-Each minute the `bronski` service will scan the model for active tasks that
+Each minute the `bronski` service will scan the model for enabled jobs that
 haven't been run in the past 59 seconds. It will then check each to see if its
 crontab definition matches the next minute.
 
@@ -57,7 +57,7 @@ You can override `run` in your custom model to, for instance, enqueue jobs:
 
 .. code-block:: python
 
-    class Tasks(CrontabBase):
+    class Jobs(CrontabBase):
 
         def run(self):
             func = self.get_function()
