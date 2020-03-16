@@ -66,7 +66,7 @@ class CrontabBase(models.Model):
     function = models.CharField(max_length=255)
     kwargs = JSONField(default=dict, blank=True)
     is_enabled = models.BooleanField(default=True)
-    last_run = models.DateTimeField(default=Now())
+    last_run = models.DateTimeField(default=timezone.now)
 
     objects = CrontabBaseQuerySet.as_manager()
 
