@@ -19,41 +19,43 @@ Install
 Setup
 -----
 
-1. Add 'bronski' to your `INSTALLED_APPS`
+1. Add 'bronski' to your ``INSTALLED_APPS``
 
    This is only needed to enable the management command.
 
-1. Create a model in your own app that inherits from `bronski.models.CrontabBase`
+2. Create a model in your own app that inherits from ``bronski.models.CrontabBase``
 
-1. Create and apply migrations:
+3. Create and apply migrations:
 
    .. code-block:: sh
 
     $ manage.py makemigrations
     $ manage.py migrate
 
-1. Specify your model in settings
+4. Specify your model in settings
 
    .. code-block:: python
 
     CRONTAB_MODEL = "myapp.MyCronModel"
 
-1. Launch your beat server:
+5. Launch your beat server:
 
    .. code-block:: sh
 
     $ ./manage.py bronski
 
-Each minute the `bronski` service will scan the model for enabled jobs that
+Each minute the ``bronski`` service will scan the model for enabled jobs that
 haven't been run in the past 59 seconds. It will then check each to see if its
 crontab definition matches the next minute.
 
-For job records that match, their `run` method will be called. The default
-`run` method first calls `self.get_function()` to import the function
-specified in the `function` field, then invokes it, passing the `kwargs` field
-as keyword arguments.
+For job records that match, their ``run`` method will be called. The default
+``run`` method will:
 
-You can override `run` in your custom model to, for instance, enqueue jobs:
+- get the specified function by calling ``self.get_function()``
+- resolve the ``kwargs`` to use by calling ``self.get_kwargs()``
+- invoke the function with the ``kwargs``.
+
+You can override ``run`` in your custom model to, for instance, enqueue jobs:
 
 .. code-block:: python
 
