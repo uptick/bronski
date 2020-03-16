@@ -6,7 +6,7 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from bronski.runner import ProgramKilled, TaskRunner
+from bronski.runner import ProgramKilled, JobRunner
 
 
 class Command(BaseCommand):
@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         model = apps.get_model(settings.CRONTAB_MODEL)
-        job = TaskRunner(model)
+        job = JobRunner(model)
         self.stdout.write("Starting Bronski server...")
         job.start()
 

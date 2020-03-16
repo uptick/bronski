@@ -1,13 +1,10 @@
 
 import logging
 import threading
-from datetime import datetime, timedelta
 
 import django
-from croniter import croniter
-from django.db import close_old_connections, transaction
+from django.db import close_old_connections
 from django.db.models.functions import Now
-from django.utils import timezone
 
 django.setup()
 
@@ -18,7 +15,7 @@ class ProgramKilled(Exception):
     pass
 
 
-class TaskRunner(threading.Thread):
+class JobRunner(threading.Thread):
     def __init__(self, model):
         super().__init__()
         self.trigger = threading.Event()
@@ -28,7 +25,7 @@ class TaskRunner(threading.Thread):
 
     def timer_handler(self, signum, frame):
         '''Signal handler for timer.'''
-        log.debug("Scanning tasks...")
+        log.debug("Scanning jobs...")
         self.trigger.set()
 
     @staticmethod
@@ -49,24 +46,14 @@ class TaskRunner(threading.Thread):
                 log.info("Stopping...")
                 break
 
-            now = timezone.localtime(timezone.now())
-
-            with transaction.atomic():
-                qset = (
-                    self.model.objects
-                    .filter(is_enabled=True, last_run__lt=Now() - timedelta(seconds=59))
-                    # Use skip_locked to catch any new tasks added, and avoid DB error
-                    .select_for_update(skip_locked=True)
-                )
-                for task in qset:
-                    next_run = croniter(task.crontab, now).get_next(datetime)
-                    if (next_run - now) < timedelta(minutes=1):
-                        log.info("Enqueueing task: %s", task)
-                        task.run()
-                    else:
-                        log.info("Skipping task: %s", task)
-
-                qset.update(last_run=Now())
+            for job in self.model.current_jobs():
+                log.info("Running job: %s", job)
+                try:
+                    job.run()
+                    job.last_run = Now()
+                    job.mark_run()
+                except Exception:
+                    log.exception("Failed running job: %s", job)
 
             # Clean up django DB connections
             close_old_connections()

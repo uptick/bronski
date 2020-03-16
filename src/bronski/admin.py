@@ -2,12 +2,14 @@ from django.contrib import admin
 from django.db.models.functions import Now
 
 
-def trigger_task(self, request, queryset):
-    for task in queryset:
-        task.run()
+def trigger_job(self, request, queryset):
+    for job in queryset:
+        job.run()
+
     queryset.update(last_run=Now())
 
-trigger_task.short_description = 'Run Selected...'
+
+trigger_job.short_description = 'Run Selected...'
 
 
 class CrontabBaseAdmin(admin.ModelAdmin):
@@ -18,5 +20,5 @@ class CrontabBaseAdmin(admin.ModelAdmin):
     date_hierarchy = 'last_run'
 
     actions = [
-        trigger_task,
+        trigger_job,
     ]
