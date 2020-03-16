@@ -21,7 +21,7 @@ class CrontabBase(models.Model):
     crontab = models.CharField(max_length=100, validators=[cron_validator])
     function = models.CharField(max_length=255)
     kwargs = JSONField(default=dict, blank=True)
-    is_enabled = models.BooleanField(default=False)
+    is_enabled = models.BooleanField(default=True)
     last_run = models.DateTimeField(default=now)
 
     class Meta:
