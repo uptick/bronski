@@ -1,6 +1,8 @@
 
 import logging
+import signal
 import threading
+from datetime import datetime
 
 import django
 from django.db import close_old_connections
@@ -22,6 +24,19 @@ class JobRunner(threading.Thread):
         self.stopped = threading.Event()
 
         self.model = model
+
+    def setup_signals(self):
+        # Set up escape hatch
+        signal.signal(signal.SIGTERM, self.break_handler)
+        signal.signal(signal.SIGINT, self.break_handler)
+
+        # Set up handler for signal
+        signal.signal(signal.SIGALRM, self.timer_handler)
+
+        # Align to the minute boundary.
+        offset = 60 - datetime.now().second
+        # Set OS timer to bug us every minute
+        signal.setitimer(signal.ITIMER_REAL, offset, 60)
 
     def timer_handler(self, signum, frame):
         '''Signal handler for timer.'''
