@@ -95,4 +95,4 @@ class CrontabBase(models.Model):
         """
         self.last_run = Now()
         self.save()
-        self.update_from_db()
+        self.refresh_from_db()
