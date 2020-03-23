@@ -17,7 +17,6 @@ def cron_validator(value):
 
 
 class CrontabBaseQuerySet(models.QuerySet):
-
     def enabled(self):
         return self.filter(is_enabled=True)
 
@@ -37,11 +36,7 @@ class CrontabBaseQuerySet(models.QuerySet):
         """
         now = timezone.now()
 
-        for job in (
-            self.enabled()
-            .filter(last_run__lt=Now() - timedelta(seconds=59))
-            .scan_jobs()
-        ):
+        for job in self.enabled().filter(last_run__lt=Now() - timedelta(seconds=59)).scan_jobs():
             next_run = croniter(job.crontab, now).get_next(datetime)
             if (next_run - now) < timedelta(minutes=1):
                 yield job
@@ -59,9 +54,10 @@ class CrontabBaseQuerySet(models.QuerySet):
 
 
 class CrontabBase(models.Model):
-    '''
+    """
     Abstract base model for custom Bronski crontab model.
-    '''
+    """
+
     crontab = models.CharField(max_length=100, validators=[cron_validator])
     function = models.CharField(max_length=255)
     kwargs = JSONField(default=dict, blank=True)
@@ -74,7 +70,7 @@ class CrontabBase(models.Model):
         abstract = True
 
     def __str__(self):
-        return f'{self.function} @ {self.crontab}'
+        return f"{self.function} @ {self.crontab}"
 
     def get_function(self):
         """Helper to import the named function in `function`."""

@@ -1,4 +1,3 @@
-
 import logging
 import signal
 import threading
@@ -39,13 +38,13 @@ class JobRunner(threading.Thread):
         signal.setitimer(signal.ITIMER_REAL, offset, 60)
 
     def timer_handler(self, signum, frame):
-        '''Signal handler for timer.'''
+        """Signal handler for timer."""
         log.debug("Scanning jobs...")
         self.trigger.set()
 
     @staticmethod
     def break_handler(signum, frame):
-        '''Signal handler for ctrl-c / SIGTERM, to exit program.'''
+        """Signal handler for ctrl-c / SIGTERM, to exit program."""
         log.info("Detected stop request...")
         raise ProgramKilled
 
