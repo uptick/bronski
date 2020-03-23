@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bronski"
-version = "0.1.0"
+version = "0.3.2"
 description = "Simple cron/beat service for Django"
 authors = ["Curtis Maloney <curtis@tinbrain.net>"]
 license = "MIT"
