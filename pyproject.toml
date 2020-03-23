@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bronski"
 version = "0.3.2"
-description = "Simple cron/beat service for Django"
+description = "Simple, generic cron-like job runner service for Django"
 authors = ["Curtis Maloney <curtis@tinbrain.net>"]
 license = "MIT"
 
