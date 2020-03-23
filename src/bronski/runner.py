@@ -56,6 +56,7 @@ class JobRunner(threading.Thread):
         self.join()
 
     def run(self):
+        log.info("Starting Bronski Runner...")
         while self.trigger.wait():
             if self.stopped.is_set():
                 log.info("Stopping...")
