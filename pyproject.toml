@@ -5,6 +5,7 @@ description = "Simple, generic cron-like job runner service for Django"
 readme = "README.rst"
 authors = ["Curtis Maloney <curtis@tinbrain.net>"]
 license = "MIT"
+homepage = "https://github.com/uptick/bronski"
 
 [tool.poetry.dependencies]
 python = "^3.7"
