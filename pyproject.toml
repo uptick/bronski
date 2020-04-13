@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bronski"
-version = "0.3.2"
+version = "0.3.3"
 description = "Simple, generic cron-like job runner service for Django"
 readme = "README.rst"
 authors = ["Curtis Maloney <curtis@tinbrain.net>"]
