@@ -20,6 +20,28 @@ class CrontabBaseQuerySet(models.QuerySet):
     def enabled(self):
         return self.filter(is_enabled=True)
 
+    @staticmethod
+    def now():
+        """
+        We have a fiddly requirement for `now`.
+
+        `croniter` has issues if you pass it the current time in UTC, and will
+        give you have a datetime with UTC timezone, but adjusted to system
+        local timezone.
+
+        To correct for this, we set the current timezone.
+
+        Additionally, asking for `get_next`, if the current time matches the
+        crontab pattern, `croniter` will return the _next_ time.
+
+        To correct for this, we subtract one second from the time.
+
+        Setting microsecond to 0 is just tidiness.
+        """
+        return timezone.localtime(
+            timezone.now().replace(microsecond=0) - timedelta(seconds=1)
+        )
+
     def scan_jobs(self):
         """
         Convenience function for scanning a set of Jobs exclusively.
@@ -34,9 +56,7 @@ class CrontabBaseQuerySet(models.QuerySet):
         """
         Yield jobs which should be run this minute.
         """
-        # We must step back 1 second, as croniter will look for the _next_ matching time.
-        # This also solves the microsecond rounding issue.
-        now = timezone.now() - timedelta(seconds=1)
+        now = self.now()
 
         for job in self.enabled().filter(last_run__lt=Now() - timedelta(seconds=59)).scan_jobs():
             next_run = croniter(job.crontab, now).get_next(datetime)
@@ -47,9 +67,7 @@ class CrontabBaseQuerySet(models.QuerySet):
         """
         yields jobs whose last run is longer ago than their crontab frequency.
         """
-        # We must step back 1 second, as croniter will look for the _next_ matching time.
-        # This also solves the microsecond rounding issue.
-        now = timezone.now() - timedelta(seconds=1)
+        now = self.now()
 
         for job in self.enabled().scan_jobs():
             next_run = croniter(job.crontab, job.last_run).get_next(datetime)
