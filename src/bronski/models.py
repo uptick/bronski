@@ -34,7 +34,9 @@ class CrontabBaseQuerySet(models.QuerySet):
         """
         Yield jobs which should be run this minute.
         """
-        now = timezone.now().replace(microsecond=0)
+        # We must step back 1 second, as croniter will look for the _next_ matching time.
+        # This also solves the microsecond rounding issue.
+        now = timezone.now() - timedelta(seconds=1)
 
         for job in self.enabled().filter(last_run__lt=Now() - timedelta(seconds=59)).scan_jobs():
             next_run = croniter(job.crontab, now).get_next(datetime)
@@ -45,7 +47,9 @@ class CrontabBaseQuerySet(models.QuerySet):
         """
         yields jobs whose last run is longer ago than their crontab frequency.
         """
-        now = timezone.now().replace(microsecond=0)
+        # We must step back 1 second, as croniter will look for the _next_ matching time.
+        # This also solves the microsecond rounding issue.
+        now = timezone.now() - timedelta(seconds=1)
 
         for job in self.enabled().scan_jobs():
             next_run = croniter(job.crontab, job.last_run).get_next(datetime)
