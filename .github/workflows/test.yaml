@@ -2,11 +2,26 @@ name: Test
 on: ["pull_request"]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Install deps
+        run: pip install black flake8
+      - name: Lint
+        run: flake8 src/ test/
+      - name: Style
+        run: black --check src/ test/
+
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install
+      - name: Install Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.6
