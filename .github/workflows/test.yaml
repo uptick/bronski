@@ -12,6 +12,7 @@ jobs:
           python-version: 3.6
       - name: Install deps
         run: |
-          pip install .
+          pip install poetry
+          poetry install
       - name: Run tests...
-        run: pytest test
+        run: poetry run pytest test
