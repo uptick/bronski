@@ -23,11 +23,11 @@ class CrontabBaseQuerySet(models.QuerySet):
     @staticmethod
     def now():
         """
-        We have a fiddly requirement for `now`.
+        We have fiddly requirements for `now`.
 
         `croniter` has issues if you pass it the current time in UTC, and will
-        give you have a datetime with UTC timezone, but adjusted to system
-        local timezone.
+        give you a datetime with UTC timezone, but adjusted to system local
+        timezone.
 
         To correct for this, we set the current timezone.
 
