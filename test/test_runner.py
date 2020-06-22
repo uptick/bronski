@@ -1,6 +1,5 @@
 import logging
 import signal
-import threading
 import time
 
 import pytest
@@ -11,10 +10,10 @@ from bronski.runner import JobRunner, ProgramKilled
 def test_setup_signals(mocker, freezer):
     runner = JobRunner(None)
 
-    mock_signal = mocker.patch('signal.signal')
-    mock_setitimer = mocker.patch('signal.setitimer')
+    mock_signal = mocker.patch("signal.signal")
+    mock_setitimer = mocker.patch("signal.setitimer")
 
-    freezer.move_to('2020-06-01T12:34:01')
+    freezer.move_to("2020-06-01T12:34:01")
 
     runner.setup_signals()
 
@@ -34,7 +33,7 @@ def test_timer_handler(caplog):
         runner.timer_handler(None, None)
 
     assert runner.trigger.is_set()
-    assert 'Scanning jobs...' in caplog.text
+    assert "Scanning jobs..." in caplog.text
 
 
 def test_break_handler(caplog):
@@ -45,13 +44,13 @@ def test_break_handler(caplog):
         with pytest.raises(ProgramKilled):
             runner.break_handler(0, None)
 
-    assert 'Detected stop request...' in caplog.text
+    assert "Detected stop request..." in caplog.text
 
 
 def test_stop(caplog, mocker):
     runner = JobRunner(None)
 
-    mocker.patch.object(runner, 'join')
+    mocker.patch.object(runner, "join")
 
     assert not runner.stopped.is_set()
     assert not runner.trigger.is_set()
@@ -74,9 +73,9 @@ def test_run_stopped(caplog):
     with caplog.at_level(logging.INFO):
         runner.run()
 
-    assert 'Starting Bronski Runner...' in caplog.text
+    assert "Starting Bronski Runner..." in caplog.text
 
-    assert 'Stopping...' in caplog.text
+    assert "Stopping..." in caplog.text
 
 
 def YIELD():
@@ -87,11 +86,9 @@ def YIELD():
 def test_run_trigger(caplog, mocker):
 
     MockModel = mocker.Mock()
-    MockModel.objects.current_jobs.configure_mock(
-        return_value=[]
-    )
+    MockModel.objects.current_jobs.configure_mock(return_value=[])
 
-    mocker.patch('django.db.close_old_connections')
+    mocker.patch("django.db.close_old_connections")
 
     runner = JobRunner(MockModel)
 

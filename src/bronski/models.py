@@ -58,7 +58,11 @@ class CrontabBaseQuerySet(models.QuerySet):
         """
         now = self.now()
 
-        for job in self.enabled().filter(last_run__lt=Now() - timedelta(seconds=59)).scan_jobs():
+        for job in (
+            self.enabled()
+            .filter(last_run__lt=Now() - timedelta(seconds=59))
+            .scan_jobs()
+        ):
             next_run = croniter(job.crontab, now).get_next(datetime)
             if (next_run - now) < timedelta(minutes=1):
                 yield job
