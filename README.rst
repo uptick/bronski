@@ -2,6 +2,15 @@
 Bronski
 =======
 
+.. image:: https://badge.fury.io/py/bronski.svg
+    :target: https://pypi.org/project/bronski
+    
+.. image:: https://img.shields.io/pypi/pyversions/bronski.svg
+    :target: https://pypi.org/project/bronski
+    
+.. image:: https://github.com/uptick/bronski/workflows/Test/badge.svg
+    :target: https://github.com/uptick/bronski/actions?query=workflow%3ATest
+
 .. rubric:: A beat server for Django, with cron-like syntax
 
 Bronski allows you to configure periodic function calls using a Django model.
