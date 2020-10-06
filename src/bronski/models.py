@@ -1,14 +1,12 @@
 from datetime import datetime, timedelta
 
-# TODO : support "universal" JSON field?
-from django.contrib.postgres.fields import JSONField
+from croniter import croniter
+
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models.functions import Now
-from django.utils.module_loading import import_string
 from django.utils import timezone
-
-from croniter import croniter
+from django.utils.module_loading import import_string
 
 
 def cron_validator(value):
@@ -86,7 +84,7 @@ class CrontabBase(models.Model):
 
     crontab = models.CharField(max_length=100, validators=[cron_validator])
     function = models.CharField(max_length=255)
-    kwargs = JSONField(default=dict, blank=True)
+    kwargs = models.JSONField(default=dict, blank=True)
     is_enabled = models.BooleanField(default=True)
     last_run = models.DateTimeField(default=timezone.now)
 

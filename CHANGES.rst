@@ -3,6 +3,13 @@ CHANGELOG
 =========
 
 
+0.4.0
+===================
+
++ Raised minimum supported version to Django 3.1. Dropped Postgres dependency (Universal JSONField support).
++ Added isort config.
+
+
 0.3.4
 ===================
 

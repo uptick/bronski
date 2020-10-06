@@ -4,7 +4,7 @@ from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from bronski.runner import ProgramKilled, JobRunner
+from bronski.runner import JobRunner, ProgramKilled
 
 
 class Command(BaseCommand):
