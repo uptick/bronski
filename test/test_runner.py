@@ -3,17 +3,17 @@ import signal
 import time
 
 import pytest
+from freezegun import freeze_time
 
 from bronski.runner import JobRunner, ProgramKilled
 
 
-def test_setup_signals(mocker, freezer):
+@freeze_time("2020-06-01T12:34:01")
+def test_setup_signals(mocker):
     runner = JobRunner(None)
 
     mock_signal = mocker.patch("signal.signal")
     mock_setitimer = mocker.patch("signal.setitimer")
-
-    freezer.move_to("2020-06-01T12:34:01")
 
     runner.setup_signals()
 
