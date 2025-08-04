@@ -37,7 +37,6 @@ def test_timer_handler(caplog):
 
 
 def test_break_handler(caplog):
-
     runner = JobRunner(None)
 
     with caplog.at_level(logging.INFO):
@@ -84,7 +83,6 @@ def YIELD():
 
 @pytest.mark.timeout(timeout=5)
 def test_run_trigger(caplog, mocker):
-
     MockModel = mocker.Mock()
     MockModel.objects.current_jobs.configure_mock(return_value=[])
 
