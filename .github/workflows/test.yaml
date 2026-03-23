@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.9", "3.10", "3.11", "3.12"]
+        python: ["3.12", "3.13", "3.14"]
+        django: ["5.1", "5.2", "6.0"]
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - name: Install uv
@@ -27,4 +28,4 @@ jobs:
       - name: Install deps
         run: uv sync --dev
       - name: Run tests
-        run: uv run pytest test
+        run: uv run --with "django~=${{ matrix.django }}" pytest test
